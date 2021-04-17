@@ -1,35 +1,47 @@
 import React from 'react';
-//import './App.css';
-import HomePage from './pages/HomePage.js';
-
+import './App.css';
+import HomePage from './pages/HomePage/HomePage.js';
+import ShopPage from './pages/ShopPage/ShopPage.js';
+import SignInAndSignUpPage from './pages/SignIn-SignUp/SignIn-SignUp.js';
+import Header from './components/Header/Header.js'
 import {Switch,Route} from 'react-router-dom';
-
-const HatsPage = (props)=> {
-  console.log(props.match.url)
-  return (
-
-    <div>
-      <h1>HATS PAGE</h1>
-    </div>
-    );
-}
+import {auth} from './firebase/firebase.utils.js'
 
 
 
+class App extends React.Component {
+  constructor () {
+    super();
+    this.state= {
+      currentUser:null
+    }
+  }
 
+  unsubscribeFromAuth=null;
 
-function App() {
-  return (
+  componentDidMount() {
+    this.unsubscribeFromAuth=auth.onAuthStateChanged(user=>{
+      this.setState({currentUser:user});
+      console.log(user);
+    }) //Method we get from Firebase which gives the session details,login status of the user(Subscription is always open as long as App component is mounted on the DOM)
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromAuth()
+  }
+
+  render () {
+    return (
     <div className="">
-    
-      <Route exact path='/' component={HomePage}/>
-      <Route path='/shop/hats' component={HatsPage}/>
-     
-      {/* <HomePage/>*/}
-    
-      
+      <Header currentUser={this.state.currentUser}/>
+      <Switch>
+        <Route exact path='/' component={HomePage}/>
+          <Route path='/shop' component={ShopPage}/>
+          <Route path='/signin' component= {SignInAndSignUpPage}/>
+      </Switch>
     </div>
   );
+  }
 }
 
 export default App;
