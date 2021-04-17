@@ -1,7 +1,7 @@
 import React from 'react';
 import './CollectionItem.scss'
 
-const CollectionItem=({key,name,price,imageUrl})=> {
+const CollectionItem=({name,price,imageUrl})=> {
 	return (
 		<div className='collection-item'>
 			<div className='image' 
